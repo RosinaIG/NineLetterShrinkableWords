@@ -7,9 +7,13 @@ import java.util.stream.Collectors;
 
 import com.geowealth.ninelettershrinkablewords.dictionary.Dictionary;
 
+/**
+ * Memoization is another possible approach available in the earlier versions
+ * of this file with execution time between 350 and 450 ms.
+ * Current solution offers execution time between 250 and 300 ms.
+ */
 public class ShrinkableWordsDictionaryExtractor {
     private static final byte MIN_WORD_LENGTH = 1;
-    private static final Map<String, Boolean> IS_WORD_IN_DICTIONARY_CACHE = new HashMap<>();
 
     private byte wordLength;
     private Set<String> validOneLetterWords;
@@ -36,20 +40,14 @@ public class ShrinkableWordsDictionaryExtractor {
             return true;
         }
 
-        if (IS_WORD_IN_DICTIONARY_CACHE.containsKey(word)) {
-            return IS_WORD_IN_DICTIONARY_CACHE.get(word);
-        }
-
         for (int i = 0; i < wordLength; i++) {
             String shrunkWord = shrinkWord(word, i);
 
             if (isValidWord(shrunkWord, dictionary) && isShrinkableWord(shrunkWord, dictionary)) {
-                IS_WORD_IN_DICTIONARY_CACHE.put(shrunkWord, true);
                 return true;
             }
         }
 
-        IS_WORD_IN_DICTIONARY_CACHE.put(word, false);
         return false;
     }
 
